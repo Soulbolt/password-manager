@@ -40,15 +40,21 @@ def save():
     if len(website) == 0 or len(password) == 0:
         messagebox.showinfo(title="oops", message="Please make sure there are no fields empty.")
     else:  # json.dump() to write/create[serialized], json.load()[unserialized] to read data, json.update() to update/add, indent for readability
-         with open("data.json", "r") as data_file:
-            # read old data
-            data = json.load(data_file)
+        try:
+            with open("data.json", "r") as data_file:
+                # read old data
+                data = json.load(data_file)    
+        except FileNotFoundError:  # Create file if it does not exist
+            with open("data.json", "w") as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
             # updating old data with new data       
             data.update(new_data)
-
-         with open("data.json", "w") as data_file:
-            # Saving updated data
-            json.dump(data, data_file, indent=4)
+            
+            with open("data.json", "w") as data_file:
+                # Saving updated data
+                json.dump(data, data_file, indent=4)
+        finally:
             clear_entries()
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
