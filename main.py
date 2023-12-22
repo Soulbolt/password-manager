@@ -17,6 +17,7 @@ def generate_password():
 
     password = "".join(password_list)
     password_entry.insert(0, password)
+    window.clipboard_append(password)
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
