@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox  #  Module, not a class
 from random import choice, randint, shuffle
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
@@ -30,15 +31,24 @@ def save():
     website = website_entry.get()
     email_username = email_entry.get()
     password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email_username,
+            "password": password,
+        }}
 
     if len(website) == 0 or len(password) == 0:
         messagebox.showinfo(title="oops", message="Please make sure there are no fields empty.")
-    else:
-        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \vEmail: {email_username} Password: {password}\n Is it ok to save?")
-        
-        if is_ok:
-            with open("data.txt", "a") as file:
-                file.write(f"{website} | {email_username} | {password}\n")
+    else:  # json.dump() to write/create[serialized], json.load()[unserialized] to read data, json.update() to update/add, indent for readability
+         with open("data.json", "r") as data_file:
+            # read old data
+            data = json.load(data_file)
+            # updating old data with new data       
+            data.update(new_data)
+
+         with open("data.json", "w") as data_file:
+            # Saving updated data
+            json.dump(data, data_file, indent=4)
             clear_entries()
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
